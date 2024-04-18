@@ -138,6 +138,12 @@ class CreateAccount(QDialog):
         else:
             return self.info_messagebox("Enter your dob correctly"
                                         " in format YYYY-MM-DD")
+        if self.age_validation(dob):
+            pass
+        else:
+            return self.info_messagebox("You must be 18 year older to "
+                                        "create an account without "
+                                        "parent or guardian!!!")
         gender = self.ui.lineEdit_6.text()
         if gender == 'M' or gender == 'F':
             pass
@@ -174,7 +180,7 @@ class CreateAccount(QDialog):
                                                     "account! please log in.")
                     if column_name == "users.users_pk":
                         return self.info_messagebox(f"pan: {pan} is already"
-                                                    f"associated with an "
+                                                    f" associated with an "
                                                     f"account!")
                     if column_name == "users.users_pk_2":
                         return self.info_messagebox(f"aadhar:a {aadhar_number}"
@@ -236,7 +242,18 @@ class CreateAccount(QDialog):
             return True
         except ValueError:
             return False
-
+    
+    @staticmethod
+    def age_validation(dob):
+        dob = datetime.strptime(dob, "%Y-%m-%d")
+        today = datetime.today()
+        age = today.year - dob.year - ((today.month, today.day)
+                                       < (dob.month, dob.day))
+        if age >= 18:
+            return True
+        else:
+            return False
+    
     @staticmethod
     def info_messagebox(message):
         info_msg = QMessageBox()
