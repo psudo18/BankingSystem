@@ -1,14 +1,18 @@
-CREATE TABLE users (
-	username varchar(30) NOT NULL,
-	password VARCHAR(30) NOT NULL,
-	phone_number DECIMAL(10, 0) NOT NULL,
-	pan VARCHAR(10) NOT NULL,
-	aadhar_number DECIMAL(12, 0) NOT NULL,
-	name VARCHAR(30) NOT NULL,
-	dob DATE NOT NULL,
-	gender ENUM('M','F') NOT NULL,
-	CONSTRAINT users_pk PRIMARY KEY (username),
-	CONSTRAINT users_unique UNIQUE KEY (pan),
-	CONSTRAINT users_unique_1 UNIQUE KEY (aadhar_number)
-)
+create table users
+(
+    username      varchar(30)     not null
+        primary key,
+    password      varchar(30)     not null,
+    phone_number  decimal         not null,
+    pan           varchar(10)     not null,
+    aadhar_number decimal(12)     not null,
+    name          varchar(30)     not null,
+    dob           date            not null,
+    gender        enum ('M', 'F') not null,
+    constraint users_pk
+        unique (pan),
+    constraint users_pk_2
+        unique (aadhar_number)
+);
+
 

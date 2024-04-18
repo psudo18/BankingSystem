@@ -223,7 +223,7 @@ class CreateAccount(QDialog):
 
     @staticmethod
     def name_validation(name):
-        if len(name) > 3:
+        if len(name) >= 3:
             if name.replace(" ", "").isalpha():
                 return True
         else:

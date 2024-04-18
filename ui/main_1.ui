@@ -43,20 +43,20 @@ background-color:qlineargradient(spread:pad, x1:0.124955, y1:0.199, x2:0.909091,
      <string>Select an option</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>90</y>
       <width>161</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton#pushButton{
+     <string notr="true">QPushButton{
 border-radius : 20px;
 background-color:rgb(40, 170, 138);
 color:rgb(255, 255, 255);
@@ -83,34 +83,14 @@ color:rgb(255, 255, 255);
 }</string>
     </property>
     <property name="text">
-     <string>withdraw</string>
+     <string>Withdraw</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>170</y>
-      <width>161</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton#pushButton_3{
-border-radius : 20px;
-background-color:rgb(40, 170, 138);
-color:rgb(255, 255, 255);
-}</string>
-    </property>
-    <property name="text">
-     <string>check balance</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_4">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>170</y>
+      <x>30</x>
+      <y>160</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -123,14 +103,34 @@ color:rgb(255, 255, 255);
 }</string>
     </property>
     <property name="text">
-     <string>profile</string>
+     <string>Check Balance</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>160</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius : 20px;
+background-color:rgb(40, 170, 138);
+color:rgb(255, 255, 255);
+}</string>
+    </property>
+    <property name="text">
+     <string>Fixed Deposite</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_5">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>250</y>
+      <x>30</x>
+      <y>230</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -150,7 +150,7 @@ color:rgb(255, 255, 255);
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>250</y>
+      <y>230</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -163,7 +163,47 @@ color:rgb(255, 255, 255);
 }</string>
     </property>
     <property name="text">
-     <string>delete account</string>
+     <string>Pay EMI</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>300</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius : 20px;
+background-color:rgb(40, 170, 138);
+color:rgb(255, 255, 255);
+}</string>
+    </property>
+    <property name="text">
+     <string>Profile</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_8">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>300</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius : 20px;
+background-color:rgb(40, 170, 138);
+color:rgb(255, 255, 255);
+}</string>
+    </property>
+    <property name="text">
+     <string>Close Account</string>
     </property>
    </widget>
   </widget>
