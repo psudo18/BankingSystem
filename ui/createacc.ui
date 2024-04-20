@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
-    <height>406</height>
+    <width>521</width>
+    <height>411</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,7 +66,7 @@ color:rgb(255, 255, 255);
      <string>Welcome ! Please fill the details to create a new account</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
@@ -113,7 +113,7 @@ color:rgb(255, 255, 255);
 </string>
     </property>
     <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
+     <enum>QLineEdit::EchoMode::Password</enum>
     </property>
     <property name="placeholderText">
      <string>Password</string>
@@ -136,7 +136,7 @@ color:rgb(255, 255, 255);
 </string>
     </property>
     <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
+     <enum>QLineEdit::EchoMode::Password</enum>
     </property>
     <property name="placeholderText">
      <string>Confirm Password</string>

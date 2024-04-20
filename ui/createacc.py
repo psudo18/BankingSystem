@@ -22,7 +22,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(520, 406)
+        Dialog.resize(521, 411)
         self.bgwidget = QWidget(Dialog)
         self.bgwidget.setObjectName(u"bgwidget")
         self.bgwidget.setGeometry(QRect(0, 0, 521, 411))
@@ -42,7 +42,7 @@ class Ui_Dialog(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(58, 20, 401, 20))
         self.label.setStyleSheet(u"font: 700 10pt \"Segoe UI\";")
-        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit = QLineEdit(self.bgwidget)
         self.lineEdit.setObjectName(u"lineEdit")
         self.lineEdit.setGeometry(QRect(380, 100, 131, 22))
@@ -56,14 +56,14 @@ class Ui_Dialog(object):
         self.lineEdit_2.setGeometry(QRect(380, 150, 131, 22))
         self.lineEdit_2.setStyleSheet(u"background-color:rgba(0,0,0,0);\n"
 "")
-        self.lineEdit_2.setEchoMode(QLineEdit.Password)
+        self.lineEdit_2.setEchoMode(QLineEdit.EchoMode.Password)
         self.lineEdit_2.setClearButtonEnabled(True)
         self.lineEdit_3 = QLineEdit(self.bgwidget)
         self.lineEdit_3.setObjectName(u"lineEdit_3")
         self.lineEdit_3.setGeometry(QRect(380, 210, 131, 22))
         self.lineEdit_3.setStyleSheet(u"background-color:rgba(0,0,0,0);\n"
 "")
-        self.lineEdit_3.setEchoMode(QLineEdit.Password)
+        self.lineEdit_3.setEchoMode(QLineEdit.EchoMode.Password)
         self.lineEdit_3.setClearButtonEnabled(True)
         self.label_3 = QLabel(self.bgwidget)
         self.label_3.setObjectName(u"label_3")

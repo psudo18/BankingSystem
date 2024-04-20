@@ -22,7 +22,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(520, 406)
+        Dialog.resize(521, 411)
         self.bgwidget = QWidget(Dialog)
         self.bgwidget.setObjectName(u"bgwidget")
         self.bgwidget.setGeometry(QRect(0, 0, 521, 411))

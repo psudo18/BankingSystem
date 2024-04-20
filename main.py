@@ -2,8 +2,21 @@ import sys
 import re
 import mysql.connector
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
-from ui import front, login, createacc
+from ui import front, login, createacc, main1
 from datetime import datetime
+
+
+class MainDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.ui = main1.Ui_Dialog()
+        self.ui.setupUi(self)
+
+
+def main_dialog():
+    window3 = MainDialog()
+    window3.setWindowTitle("Account")
+    window3.exec()
 
 
 class LoginDialog(QDialog):
@@ -37,8 +50,9 @@ class LoginDialog(QDialog):
                 if result:
                     stored_password = result[1]
                     if stored_password == password:
-                        return self.info_messagebox("********Log in Successful"
-                                                    "********")
+                        return main_dialog()
+                        # return self.info_messagebox("********Log in Successful"
+                        #                             "********")
                     else:
                         return self.info_messagebox("Invalid password !!!"
                                                     " Please try again!!!")
