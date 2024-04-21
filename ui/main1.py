@@ -31,12 +31,12 @@ class Ui_Dialog(object):
 "}")
         self.label = QLabel(self.bgwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(150, 10, 211, 61))
+        self.label.setGeometry(QRect(160, 10, 211, 41))
         self.label.setStyleSheet(u"font: 700 12pt \"Segoe UI\";")
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.pushButton = QPushButton(self.bgwidget)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(30, 90, 161, 41))
+        self.pushButton.setGeometry(QRect(30, 110, 161, 41))
         self.pushButton.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -44,7 +44,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_2 = QPushButton(self.bgwidget)
         self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(320, 90, 161, 41))
+        self.pushButton_2.setGeometry(QRect(320, 110, 161, 41))
         self.pushButton_2.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -52,7 +52,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_3 = QPushButton(self.bgwidget)
         self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setGeometry(QRect(30, 160, 161, 41))
+        self.pushButton_3.setGeometry(QRect(30, 180, 161, 41))
         self.pushButton_3.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -60,7 +60,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_4 = QPushButton(self.bgwidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
-        self.pushButton_4.setGeometry(QRect(320, 160, 161, 41))
+        self.pushButton_4.setGeometry(QRect(320, 180, 161, 41))
         self.pushButton_4.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -68,7 +68,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_5 = QPushButton(self.bgwidget)
         self.pushButton_5.setObjectName(u"pushButton_5")
-        self.pushButton_5.setGeometry(QRect(30, 230, 161, 41))
+        self.pushButton_5.setGeometry(QRect(30, 250, 161, 41))
         self.pushButton_5.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -76,7 +76,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_6 = QPushButton(self.bgwidget)
         self.pushButton_6.setObjectName(u"pushButton_6")
-        self.pushButton_6.setGeometry(QRect(320, 230, 161, 41))
+        self.pushButton_6.setGeometry(QRect(320, 250, 161, 41))
         self.pushButton_6.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -84,7 +84,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_7 = QPushButton(self.bgwidget)
         self.pushButton_7.setObjectName(u"pushButton_7")
-        self.pushButton_7.setGeometry(QRect(30, 300, 161, 41))
+        self.pushButton_7.setGeometry(QRect(30, 320, 161, 41))
         self.pushButton_7.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
@@ -92,12 +92,17 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_8 = QPushButton(self.bgwidget)
         self.pushButton_8.setObjectName(u"pushButton_8")
-        self.pushButton_8.setGeometry(QRect(320, 300, 161, 41))
+        self.pushButton_8.setGeometry(QRect(320, 320, 161, 41))
         self.pushButton_8.setStyleSheet(u"QPushButton{\n"
 "border-radius : 20px;\n"
 "background-color:rgb(40, 170, 138);\n"
 "color:rgb(255, 255, 255);\n"
 "}")
+        self.label_2 = QLabel(self.bgwidget)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setGeometry(QRect(120, 60, 281, 20))
+        self.label_2.setStyleSheet(u"font: 700 10pt \"Segoe UI\";")
+        self.label_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.retranslateUi(Dialog)
 
@@ -115,5 +120,6 @@ class Ui_Dialog(object):
         self.pushButton_6.setText(QCoreApplication.translate("Dialog", u"Pay EMI", None))
         self.pushButton_7.setText(QCoreApplication.translate("Dialog", u"Transaction", None))
         self.pushButton_8.setText(QCoreApplication.translate("Dialog", u"Close Account", None))
+        self.label_2.setText("")
     # retranslateUi
 

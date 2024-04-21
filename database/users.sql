@@ -9,10 +9,13 @@ create table users
     name          varchar(30)     not null,
     dob           date            not null,
     gender        enum ('M', 'F') not null,
+    account_no    decimal(16)     not null,
     constraint users_pk
         unique (pan),
     constraint users_pk_2
-        unique (aadhar_number)
+        unique (aadhar_number),
+    constraint users_pk_3
+        unique (account_no)
 );
 
 

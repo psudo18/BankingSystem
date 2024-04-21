@@ -7,14 +7,15 @@ from datetime import datetime
 
 
 class MainDialog(QDialog):
-    def __init__(self):
+    def __init__(self, acc_no):
         super().__init__()
         self.ui = main1.Ui_Dialog()
         self.ui.setupUi(self)
+        self.ui.label_2.setText(f"Account No. {acc_no}")
 
 
-def main_dialog():
-    window3 = MainDialog()
+def main_dialog(acc_no):
+    window3 = MainDialog(acc_no)
     window3.setWindowTitle("Account")
     window3.exec()
 
@@ -40,6 +41,7 @@ class LoginDialog(QDialog):
                 host="localhost",
                 user="root",
                 password="root@123",
+                database='quantum_bank'
             )
             cur = conn.cursor()
             query = "SELECT * FROM quantum_bank.users where username = %s"
@@ -50,7 +52,8 @@ class LoginDialog(QDialog):
                 if result:
                     stored_password = result[1]
                     if stored_password == password:
-                        return main_dialog()
+                        acc_no = result[8]
+                        return main_dialog(acc_no)
                         # return self.info_messagebox("********Log in Successful"
                         #                             "********")
                     else:
@@ -66,9 +69,6 @@ class LoginDialog(QDialog):
             print(err.msg)
             return self.info_messagebox("Connection failed !! please try "
                                         "again later !!")
-        finally:
-            cur.close()
-            conn.close()
 
     @staticmethod
     def email_valid(username):
@@ -164,19 +164,22 @@ class CreateAccount(QDialog):
         else:
             return self.info_messagebox("Please enter M for male "
                                         "or F for female!!!!")
+        account_no = self.get_acc_no(aadhar_number)
         try:
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
                 password="root@123",
+                database='quantum_bank'
             )
             print("Database connection successful!!")
             cur = conn.cursor()
             query = ("INSERT INTO quantum_bank.users (username, password, "
-                     "phone_number,pan, aadhar_number, name, dob, gender)"
-                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
+                     "phone_number,pan, aadhar_number, name, dob, gender"
+                     ", account_no)"
+                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
             values = (username, password, phone_number, pan, aadhar_number,
-                      name, dob, gender)
+                      name, dob, gender, account_no)
             try:
                 cur.execute(query, values)
                 conn.commit()
@@ -206,9 +209,6 @@ class CreateAccount(QDialog):
         except mysql.connector.Error as e:
             print(e)
             return self.info_messagebox("Something went wrong :)")
-        finally:
-            cur.close()
-            conn.close()
 
     @staticmethod
     def email_valid(username):
@@ -267,7 +267,11 @@ class CreateAccount(QDialog):
             return True
         else:
             return False
-    
+
+    @staticmethod
+    def get_acc_no(aadhar_no):
+        return int(f"18{aadhar_no}69")
+
     @staticmethod
     def info_messagebox(message):
         info_msg = QMessageBox()
