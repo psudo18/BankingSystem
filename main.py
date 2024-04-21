@@ -40,7 +40,7 @@ class LoginDialog(QDialog):
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root@123",
+                password="root@123",   # Put your database user's password
                 database='quantum_bank'
             )
             cur = conn.cursor()
@@ -169,7 +169,7 @@ class CreateAccount(QDialog):
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root@123",
+                password="root@123",    # Put your database user's password
                 database='quantum_bank'
             )
             print("Database connection successful!!")

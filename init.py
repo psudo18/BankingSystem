@@ -13,18 +13,22 @@ try:
         user="root",
         password="root@123",
         # add your password of mysql root
-        database="quantum_bank"
-        # database quantum_bank must be created in mysql
     )
     cur = conn.cursor()
+
+    query = "create database quantum_bank;"
+    cur.execute(query)
+
     # The users.sql is used to create users table in database
     with open("database\\users.sql") as sql_file:
         sql_script = sql_file.read()
     cur.execute(sql_script, multi=True)
+
     # The accounts.sql is used to create accounts table in database.
     with open("database\\accounts.sql") as sql_file:
         sql_script = sql_file.read()
     cur.execute(sql_script, multi=True)
+
     # The acc_trigger.sql is used to set a trigger
     with open("database\\acc_trigger.sql") as sql_file:
         sql_script = sql_file.read()

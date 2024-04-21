@@ -10,34 +10,14 @@ This project uses the mysql database to store the users data and perform various
 
 Creating the virtual environment for the project is recommended.
 
-Firstly install mysql database on your system.
-
-Then create a database name quantum_bank.
-
-Then run init.py file to automatically create tables and triggers
-in the database.
-
-#### Warning
-
-You only need to run init.py for creation of table and triggers in database.
-
-If you got error message in init.py then follow the procedure manually.
+You need to install mysql database on your system or configure mysql server.
 
 
-Firstly create the table users in the mysql database quantum_bank 
-using the users.sql file from the database directory.
-
-Then create the table accounts in the mysql database quantum_bank
-using the accounts.sql file from the database directory.
-
-Then create the trigger in database quantum_bank using the acc_trigger.sql
-file from the database directory.
 
 
-### Compulsory
+### Add-ons
 
-Then install some python packages
-
+Then install some python packages.
 
 
 ## Python packages
@@ -48,17 +28,40 @@ Then install some python packages
 #### Get PySide6
 
 ```
-  pip install PySide6
+pip install PySide6
 ```
 
 
 #### Get mysql-connector-python
 
 ```
-  pip install pip install mysql-connector-python
+pip install pip install mysql-connector-python
 ```
 
-Then run main.py
+
+
+### Procedure
+
+Firstly run the init.py only once to set up the database.
+
+Then run the main.py file.
+
+### Warning
+
+You only need to run init.py for creation of table and triggers in database.
+
+If you got error message in init.py then follow the procedure manually.
+
+
+
+1) Firstly create the table users in the mysql database quantum_bank 
+using the users.sql file from the database directory.
+
+2) Then create the table accounts in the mysql database quantum_bank
+using the accounts.sql file from the database directory.
+
+3) Then create the trigger in database quantum_bank using the acc_trigger.sql
+file from the database directory.
 
 
 
