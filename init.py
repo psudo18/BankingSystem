@@ -19,6 +19,9 @@ try:
     query = "create database quantum_bank;"
     cur.execute(query)
 
+    query = "use quantum_bank;"
+    cur.execute(query)
+
     # The users.sql is used to create users table in database
     with open("database\\users.sql") as sql_file:
         sql_script = sql_file.read()

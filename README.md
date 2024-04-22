@@ -54,13 +54,15 @@ If you got error message in init.py then follow the procedure manually.
 
 
 
-1) Firstly create the table users in the mysql database quantum_bank 
+1) create database quantum_bank in mysql server.
+
+2) Then create the table users in the database quantum_bank 
 using the users.sql file from the database directory.
 
-2) Then create the table accounts in the mysql database quantum_bank
+3) Then create the table accounts in the database quantum_bank
 using the accounts.sql file from the database directory.
 
-3) Then create the trigger in database quantum_bank using the acc_trigger.sql
+4) Then create the trigger in database quantum_bank using the acc_trigger.sql
 file from the database directory.
 
 
