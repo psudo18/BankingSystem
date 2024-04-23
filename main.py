@@ -2,8 +2,112 @@ import sys
 import re
 import mysql.connector
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
-from ui import front, login, createacc, main1
+from ui import (front, login, createacc, main1, deposit, checkbalance)
 from datetime import datetime
+
+
+class CheckBalance(QDialog):
+    def __init__(self, acc_no):
+        super().__init__()
+        self.ui = checkbalance.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        self.ui.pushButton.clicked.connect(lambda: self.checking(acc_no))
+
+    def checking(self, acc_no):
+        try:
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            query = ("select balance from quantum_bank.accounts"
+                     " where account_no = %s;")
+            value = (acc_no,)
+            try:
+                cur.execute(query, value)
+                result = cur.fetchone()
+                amount = float(result[0])
+                self.ui.label_2.setText(f"Amount: {amount} INR")
+            except mysql.connector.Error as err:
+                print(err.msg)
+                return self.info_messagebox(err.msg)
+        except mysql.connector.Error as err:
+            print(err.msg)
+            return self.info_messagebox(err.msg)
+
+    @staticmethod
+    def info_messagebox(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def check_fnc(acc_no):
+    window5 = CheckBalance(acc_no)
+    window5.setWindowTitle("Balance")
+    window5.exec()
+
+
+class Deposit(QDialog):
+    def __init__(self, acc_no):
+        super().__init__()
+        self.ui = deposit.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No: {acc_no}")
+        self.ui.pushButton.clicked.connect(lambda: self.con_deposit(acc_no))
+
+    def con_deposit(self, acc_no):
+        amount = self.ui.lineEdit.text()
+        if amount.isdigit():
+            amount = int(amount)
+            if amount <= 0:
+                return self.info_messagebox("Please Enter a valid amount "
+                                            "to deposit in your account! ")
+            try:
+                conn = mysql.connector.connect(
+                    host="localhost",
+                    user="root",
+                    password="root@123",  # Put your database password
+                    database='quantum_bank'
+                )
+                cur = conn.cursor()
+                query = ("UPDATE quantum_bank.accounts set balance = %s "
+                         "where account_no = %s;")
+                values = (amount, acc_no)
+                try:
+                    cur.execute(query, values)
+                    conn.commit()
+                    return self.info_messagebox(f"The amount {amount} INR "
+                                                f"has been deposit to your "
+                                                f"account successfully! ")
+                except mysql.connector.Error as err:
+                    conn.rollback()
+                    print(err.msg)
+                    return self.info_messagebox(err.msg)
+
+            except mysql.connector.Error as err:
+                print(err.msg)
+                return self.info_messagebox("Something went wrong :) ")
+        else:
+            return self.info_messagebox("Please Enter a valid amount "
+                                        "in INR to deposit! ")
+
+    @staticmethod
+    def info_messagebox(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def deposit_fnc(acc_no):
+    window4 = Deposit(acc_no)
+    window4.setWindowTitle("Deposit")
+    window4.exec()
 
 
 class MainDialog(QDialog):
@@ -12,10 +116,8 @@ class MainDialog(QDialog):
         self.ui = main1.Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.label_2.setText(f"Account No. {acc_no}")
-        self.ui.pushButton.clicked.connect(self.deposit)
-
-    def deposit(self, acc_no):
-        pass
+        self.ui.pushButton.clicked.connect(lambda: deposit_fnc(acc_no))
+        self.ui.pushButton_3.clicked.connect(lambda: check_fnc(acc_no))
 
 
 def main_dialog(acc_no):

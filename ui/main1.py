@@ -112,10 +112,10 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Select an option", None))
-        self.pushButton.setText(QCoreApplication.translate("Dialog", u"Deposite", None))
+        self.pushButton.setText(QCoreApplication.translate("Dialog", u"Deposit", None))
         self.pushButton_2.setText(QCoreApplication.translate("Dialog", u"Withdraw", None))
         self.pushButton_3.setText(QCoreApplication.translate("Dialog", u"Check Balance", None))
-        self.pushButton_4.setText(QCoreApplication.translate("Dialog", u"Fixed Deposite", None))
+        self.pushButton_4.setText(QCoreApplication.translate("Dialog", u"Fixed Deposit", None))
         self.pushButton_5.setText(QCoreApplication.translate("Dialog", u"Loan", None))
         self.pushButton_6.setText(QCoreApplication.translate("Dialog", u"Pay EMI", None))
         self.pushButton_7.setText(QCoreApplication.translate("Dialog", u"Transaction", None))
