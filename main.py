@@ -12,6 +12,10 @@ class MainDialog(QDialog):
         self.ui = main1.Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.label_2.setText(f"Account No. {acc_no}")
+        self.ui.pushButton.clicked.connect(self.deposit)
+
+    def deposit(self, acc_no):
+        pass
 
 
 def main_dialog(acc_no):
@@ -40,7 +44,7 @@ class LoginDialog(QDialog):
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root@123",   # Put your database user's password
+                password="root@123",   # Put your database password
                 database='quantum_bank'
             )
             cur = conn.cursor()
@@ -169,7 +173,7 @@ class CreateAccount(QDialog):
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root@123",    # Put your database user's password
+                password="root@123",    # Put your database password
                 database='quantum_bank'
             )
             print("Database connection successful!!")

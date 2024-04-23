@@ -35,7 +35,7 @@ pip install PySide6
 #### Get mysql-connector-python
 
 ```
-pip install pip install mysql-connector-python
+pip install mysql-connector-python
 ```
 
 
