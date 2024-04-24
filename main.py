@@ -62,6 +62,7 @@ class Deposit(QDialog):
 
     def con_deposit(self, acc_no):
         amount = self.ui.lineEdit.text()
+        self.ui.lineEdit.clear()
         if amount.isdigit():
             amount = int(amount)
             if amount <= 0:
@@ -75,9 +76,16 @@ class Deposit(QDialog):
                     database='quantum_bank'
                 )
                 cur = conn.cursor()
+                query = ("select balance from quantum_bank.accounts"
+                         " where account_no = %s;")
+                value = (acc_no,)
+                cur.execute(query, value)
+                result = cur.fetchone()
+                balance = float(result[0])
+                balance = balance + amount
                 query = ("UPDATE quantum_bank.accounts set balance = %s "
                          "where account_no = %s;")
-                values = (amount, acc_no)
+                values = (balance, acc_no)
                 try:
                     cur.execute(query, values)
                     conn.commit()
