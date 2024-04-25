@@ -53,7 +53,7 @@ class Ui_Dialog(object):
         self.label_2.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.label_3 = QLabel(self.bgwidget)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(88, 85, 191, 21))
+        self.label_3.setGeometry(QRect(28, 85, 311, 21))
         self.label_3.setStyleSheet(u"font: 700 10pt \"Segoe UI\";")
         self.label_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
