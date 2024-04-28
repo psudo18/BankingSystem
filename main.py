@@ -35,8 +35,12 @@ class WithDraw(QDialog):
         self.ui.setupUi(self)
         self.ui.label.setText(f"Account No. {acc_no} ")
         balance = fetch_balance(acc_no)
-        self.ui.label_3.setText(f"Amount : {balance} INR ")
-        self.ui.pushButton.clicked.connect(lambda: self.withdraw(acc_no))
+        try:
+            balance = float(balance)
+            self.ui.label_3.setText(f"Amount : {balance} INR ")
+            self.ui.pushButton.clicked.connect(lambda: self.withdraw(acc_no))
+        except ValueError:
+            self.info_messagebox(balance)
 
     def withdraw(self, acc_no):
         amount = self.ui.lineEdit.text()
@@ -107,6 +111,7 @@ class CheckBalance(QDialog):
             self.ui.label_2.setText(f"Amount : {balance} INR ")
         except ValueError:
             self.info_messagebox(balance)
+            self.close()
 
     @staticmethod
     def info_messagebox(message):
@@ -304,6 +309,9 @@ class CreateAccount(QDialog):
             return self.info_messagebox("Please use a strong password!")
         phone_number = self.ui.lineEdit_7.text()
         if self.check(phone_number, 10):
+            if phone_number.startswith('0'):
+                return self.info_messagebox("Your Phone NO. can't start "
+                                            "with 0 Please recheck it!!")
             int(phone_number)
         else:
             return self.info_messagebox("Invalid phone no.!! "

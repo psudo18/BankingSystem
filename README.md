@@ -75,5 +75,5 @@ file from the database directory.
 
 ## Support
 
-For support, email pseudomail18@gmail.com or join our [Telegram group](https://t.me/+xGwIiE5xuZRkMTll).
+For support, email pseudomail18@gmail.com .
 
