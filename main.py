@@ -3,8 +3,8 @@ import re
 import mysql.connector
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from ui import (front, login, createacc, main1, deposit, checkbalance,
-                withdraw)
-from datetime import datetime
+                withdraw, fdm, fdc, confirmfd)
+from datetime import datetime, date
 
 
 def fetch_balance(acc_no):
@@ -28,6 +28,207 @@ def fetch_balance(acc_no):
         return "Something went wrong :) "
 
 
+class FDConfirm(QDialog):
+    def __init__(self, acc_no, amount, roi, years, mature_am, start_date,
+                 maturity_date):
+        super().__init__()
+        self.ui = confirmfd.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        self.ui.label_2.setText(f"Amount: {amount} ")
+        self.ui.label_3.setText(f"Rate of Interest: {roi}% ")
+        self.ui.label_4.setText(f"Time period: {years} years")
+        self.ui.label_5.setText(f"FD Maturity Amount: {mature_am} ")
+        self.ui.pushButton.clicked.connect(lambda: self.con_fd(acc_no,
+                                                               amount,
+                                                               mature_am,
+                                                               roi,
+                                                               start_date,
+                                                               maturity_date,
+                                                               years))
+
+    def con_fd(self, acc_no, amount, mature_am, roi, start_date,
+               maturity_date, years):
+        balance = fetch_balance(acc_no)
+        try:
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            balance = float(balance)
+            balance = balance - amount
+            query = ("UPDATE quantum_bank.accounts set balance = %s "
+                     "where account_no = %s;")
+            values = (balance, acc_no)
+            try:
+                cur.execute(query, values)
+                query = ("INSERT INTO quantum_bank.fix_deposit (acc_no, "
+                         "amount, maturity_amount, roi, start_date, "
+                         "maturity_date, years)"
+                         "VALUES (%s, %s, %s, %s, %s, %s, %s)")
+                values = (acc_no, amount, mature_am, roi, start_date,
+                          maturity_date, years)
+                cur.execute(query, values)
+                no = cur.lastrowid
+                conn.commit()
+                self.close()
+                return self.info(f"FD created successfully! FD No. {no}")
+            except mysql.connector.Error as e:
+                conn.rollback()
+                return self.info(e.msg)
+        except ValueError:
+            return self.info(balance)
+        except mysql.connector.Error as err:
+            return self.info(err.msg)
+
+    @staticmethod
+    def info(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def confirm_fd(self, acc_no, amount, roi, years, mature_am, start_date,
+               maturity_date):
+    self.close()
+    window9 = FDConfirm(acc_no, amount, roi, years, mature_am, start_date,
+                        maturity_date)
+    window9.setWindowTitle("Confirm FD")
+    window9.exec()
+
+
+class FDCreate(QDialog):
+    def __init__(self, acc_no):
+        super().__init__()
+        self.ui = fdc.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        balance = fetch_balance(acc_no)
+        try:
+            balance = float(balance)
+        except ValueError:
+            self.info(balance)
+        self.ui.label_2.setText(f"Balance : {balance} INR ")
+        self.ui.pushButton.clicked.connect(lambda: self.confirm(acc_no, balance))
+
+    def confirm(self, acc_no, balance):
+        amount = self.ui.lineEdit.text()
+        years = self.ui.lineEdit_2.text()
+        if self.a_valid(amount):
+            amount = float(amount)
+            if amount < 1000:
+                return self.info("Insufficient amount for FD ")
+            elif amount > 10000000:
+                return self.info("You cant create fd of 1 cr. plus ")
+        else:
+            return self.info("Please enter valid amount!")
+        try:
+            balance = float(balance)
+            if balance < amount:
+                return self.info("Insufficient balance. Please check your "
+                                 "balance!!")
+        except ValueError:
+            self.info(balance)
+            self.close()
+        if self.y_valid(years):
+            years = int(years)
+        else:
+            return self.info("Please enter valid Tenure!")
+        if amount in range(1000, 50000):
+            if years in range(1, 5):
+                roi = 5
+            else:
+                roi = 6
+        elif amount in range(50001, 200000):
+            if years in range(1, 5):
+                roi = 6.5
+            else:
+                roi = 7.5
+        elif amount in range(200001, 1000000):
+            if years in range(1, 5):
+                roi = 8
+            else:
+                roi = 9
+        elif amount in range(1000001, 10000000):
+            if years in range(1, 3):
+                roi = 9.5
+            elif years in range(3, 7):
+                roi = 10.5
+            else:
+                roi = 12
+        else:
+            roi = 10
+
+        n = 4  # compounding_frequency
+        mature = amount * (1 + roi / (100 * n)) ** (n * years)
+        maturity_amount = round(mature, 2)
+        today = date.today()
+        start_date = today
+        year = today.year + years
+        year = int(year)
+        maturity_date = today.replace(year=year)
+        print(maturity_date)
+        confirm_fd(self, acc_no, amount, roi, years, maturity_amount,
+                   start_date, maturity_date)
+
+    @staticmethod
+    def a_valid(amount):
+        try:
+            amount = float(amount)
+            if amount in range(1, 10000001):
+                return True
+            else:
+                return False
+        except ValueError as err:
+            print(err)
+            return False
+
+    @staticmethod
+    def y_valid(years):
+        try:
+            years = int(years)
+            if years in range(1, 11):
+                return True
+            else:
+                return False
+        except ValueError as err:
+            print(err)
+            return False
+
+    @staticmethod
+    def info(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def create_fd(self, acc_no):
+    self.close()
+    window8 = FDCreate(acc_no)
+    window8.setWindowTitle("Create FD")
+    window8.exec()
+
+
+class FD(QDialog):
+    def __init__(self, acc_no):
+        super().__init__()
+        self.ui = fdm.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        self.ui.pushButton.clicked.connect(lambda: create_fd(self, acc_no))
+
+
+def fd_fnc(acc_no):
+    window7 = FD(acc_no)
+    window7.setWindowTitle("Fix Deposit")
+    window7.exec()
+
+
 class WithDraw(QDialog):
     def __init__(self, acc_no):
         super().__init__()
@@ -37,10 +238,10 @@ class WithDraw(QDialog):
         balance = fetch_balance(acc_no)
         try:
             balance = float(balance)
-            self.ui.label_3.setText(f"Amount : {balance} INR ")
             self.ui.pushButton.clicked.connect(lambda: self.withdraw(acc_no))
         except ValueError:
             self.info_messagebox(balance)
+        self.ui.label_3.setText(f"Balance : {balance} INR ")
 
     def withdraw(self, acc_no):
         amount = self.ui.lineEdit.text()
@@ -108,7 +309,7 @@ class CheckBalance(QDialog):
         balance = fetch_balance(acc_no)
         try:
             balance = float(balance)
-            self.ui.label_2.setText(f"Amount : {balance} INR ")
+            self.ui.label_2.setText(f"Balance : {balance} INR ")
         except ValueError:
             self.info_messagebox(balance)
             self.close()
@@ -199,6 +400,7 @@ class MainDialog(QDialog):
         self.ui.pushButton.clicked.connect(lambda: deposit_fnc(acc_no))
         self.ui.pushButton_2.clicked.connect(lambda: withdraw_fnc(acc_no))
         self.ui.pushButton_3.clicked.connect(lambda: check_fnc(acc_no))
+        self.ui.pushButton_4.clicked.connect(lambda: fd_fnc(acc_no))
 
 
 def main_dialog(acc_no):

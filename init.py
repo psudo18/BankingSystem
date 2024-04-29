@@ -37,6 +37,19 @@ try:
         sql_script = sql_file.read()
     cur.execute(sql_script, multi=True)
 
+    # The fix_deposit.sql is used to create fd table in database.
+    with open("database\\fix_deposit.sql.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
+    query = "SET GLOBAL event_scheduler = ON;"
+    cur.execute(query)
+
+    # The fd_scheduler.sql is used to create event update balance in database.
+    with open("database\\fd_scheduler.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
     conn.commit()
     print("Success !!!")
 
