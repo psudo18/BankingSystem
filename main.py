@@ -3,7 +3,7 @@ import re
 import mysql.connector
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from ui import (front, login, createacc, main1, deposit, checkbalance,
-                withdraw, fdm, fdc, confirmfd)
+                withdraw, fdm, fdc, confirmfd, fdb)
 from datetime import datetime, date
 
 
@@ -26,6 +26,77 @@ def fetch_balance(acc_no):
     except mysql.connector.Error as err:
         print(err.msg)
         return "Something went wrong :) "
+
+
+class FDBreak(QDialog):
+    def __init__(self, acc_no):
+        super().__init__()
+        self.ui = fdb.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        self.info("WARNING!!! If you break your fd then you get no interest!")
+        self.ui.pushButton_2.clicked.connect(lambda: self.bre_fd(acc_no))
+
+    def bre_fd(self, acc_no):
+        fd_no = self.ui.lineEdit.text()
+        try:
+            fd_no = int(fd_no)
+            balance = fetch_balance(acc_no)
+            balance = float(balance)
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            query = ("select amount from quantum_bank.fix_deposit where "
+                     "fd_no = %s and acc_no = %s;")
+            values = (fd_no, acc_no)
+            cur.execute(query, values)
+            try:
+                result = cur.fetchone()
+                amount = result[0]
+                amount = float(amount)
+                balance = amount + balance
+                query = ("UPDATE quantum_bank.accounts set balance = %s "
+                         "where account_no = %s;")
+                values = (balance, acc_no)
+                cur.execute(query, values)
+                query = ("delete from quantum_bank.fix_deposit where fd_no"
+                         " = %s and acc_no = %s;")
+                values = (fd_no, acc_no)
+                cur.execute(query, values)
+                conn.commit()
+                self.close()
+                return self.info("Done! Please check your balance!")
+            except ValueError:
+                conn.rollback()
+                return self.info("Something went wrong :)")
+            except mysql.connector.Error as e:
+                conn.rollback()
+                return self.info(e.msg)
+            except TypeError:
+                conn.rollback()
+                return self.info(f"Your FD of No. {fd_no} not exist!!")
+        except ValueError:
+            return self.info("Something went wrong! please check your fd no.")
+        except mysql.connector.Error as e:
+            return self.info(e.msg)
+
+    @staticmethod
+    def info(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def break_fd(self, acc_no):
+    self.close()
+    window10 = FDBreak(acc_no)
+    window10.setWindowTitle("Break FD")
+    window10.exec()
 
 
 class FDConfirm(QDialog):
@@ -221,6 +292,7 @@ class FD(QDialog):
         self.ui.setupUi(self)
         self.ui.label.setText(f"Account No. {acc_no} ")
         self.ui.pushButton.clicked.connect(lambda: create_fd(self, acc_no))
+        self.ui.pushButton_2.clicked.connect(lambda: break_fd(self, acc_no))
 
 
 def fd_fnc(acc_no):
