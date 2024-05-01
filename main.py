@@ -3,7 +3,8 @@ import re
 import mysql.connector
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from ui import (front, login, createacc, main1, deposit, checkbalance,
-                withdraw, fdm, fdc, confirmfd, fdb)
+                withdraw, fdm, fdc, confirmfd, fdb, transactionm,
+                transactionc)
 from datetime import datetime, date
 
 
@@ -26,6 +27,137 @@ def fetch_balance(acc_no):
     except mysql.connector.Error as err:
         print(err.msg)
         return "Something went wrong :) "
+
+
+class TraConfirm(QDialog):
+    def __init__(self, acc_no, name, rec_acc):
+        super().__init__()
+        self.ui = transactionc.Ui_Dialog()
+        self.ui.setupUi(self)
+        balance = fetch_balance(acc_no)
+        try:
+            balance = float(balance)
+        except ValueError:
+            self.info("Something went wrong :)")
+            self.close()
+        self.ui.label.setText(f"Balance : {balance} INR ")
+        self.ui.label_2.setText(f"Name : {name} ")
+        self.ui.pushButton_2.clicked.connect(lambda: self.confirm(acc_no,
+                                                                  balance,
+                                                                  rec_acc))
+
+    def confirm(self, acc_no, balance, rec_acc):
+        amount = self.ui.lineEdit.text()
+        try:
+            amount = float(amount)
+            balance = float(balance)
+            if balance < amount:
+                self.ui.lineEdit.clear()
+                return self.info("Insufficient Balance! to make transaction!!")
+            if amount <= 0:
+                self.ui.lineEdit.clear()
+                return self.info("Please enter the valid amount for transaction!")
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            rec_bal = fetch_balance(rec_acc)
+            rec_bal = float(rec_bal)
+            balance = balance - amount
+            rec_bal = rec_bal + amount
+            try:
+                query = ("UPDATE quantum_bank.accounts set balance = %s "
+                         "where account_no = %s;")
+                values = (balance, acc_no)
+                cur.execute(query, values)
+                values = (rec_bal, rec_acc)
+                cur.execute(query, values)
+                conn.commit()
+                self.close()
+                return self.info(f"The Transaction of {amount} INR has been"
+                                 f" successful to {rec_acc} ")
+            except mysql.connector.Error:
+                conn.rollback()
+                return self.info("Something went wrong! Try again later!!")
+        except TypeError:
+            return self.info(f"Unable to make transaction to {rec_acc}")
+        except ValueError:
+            self.ui.lineEdit.clear()
+            return self.info("Something went wrong!!")
+        except mysql.connector.Error:
+            return self.info("Something went wrong :) ")
+
+    @staticmethod
+    def info(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def confirm_tra(self, acc_no, name, rec_acc):
+    self.close()
+    window12 = TraConfirm(acc_no, name, rec_acc)
+    window12.setWindowTitle("Confirm!!")
+    window12.exec()
+
+
+class Transaction(QDialog):
+    def __init__(self, acc_no):
+        super().__init__()
+        self.ui = transactionm.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        self.ui.pushButton_2.clicked.connect(lambda: self.proceed(acc_no))
+
+    def proceed(self, acc_no):
+        rec_acc = self.ui.lineEdit.text()
+        if len(rec_acc) != 16:
+            self.ui.lineEdit.clear()
+            return self.info("Invalid Account No.!! Please enter the valid"
+                             " Account No. for transaction!")
+        acc_no = int(acc_no)
+        try:
+            receiver = int(rec_acc)
+            if acc_no == receiver:
+                self.ui.lineEdit.clear()
+                return self.info("You cant make transaction to yourself!!!")
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            query = ("select name from quantum_bank.accounts where account_no"
+                     "=%s;")
+            value = (receiver,)
+            cur.execute(query, value)
+            result = cur.fetchone()
+            name = result[0]
+            return confirm_tra(self, acc_no, name, receiver)
+        except ValueError:
+            self.ui.lineEdit.clear()
+            return self.info("Invalid Account No.!! ")
+        except TypeError:
+            self.ui.lineEdit.clear()
+            return self.info("Account does not exist!! Please recheck account no.")
+
+    @staticmethod
+    def info(message):
+        info_msg = QMessageBox()
+        info_msg.setWindowTitle("Info!!")
+        info_msg.setText(message)
+        info_msg.exec()
+
+
+def tra_fnc(acc_no):
+    window11 = Transaction(acc_no)
+    window11.setWindowTitle("Transaction")
+    window11.exec()
 
 
 class FDBreak(QDialog):
@@ -473,6 +605,7 @@ class MainDialog(QDialog):
         self.ui.pushButton_2.clicked.connect(lambda: withdraw_fnc(acc_no))
         self.ui.pushButton_3.clicked.connect(lambda: check_fnc(acc_no))
         self.ui.pushButton_4.clicked.connect(lambda: fd_fnc(acc_no))
+        self.ui.pushButton_7.clicked.connect(lambda: tra_fnc(acc_no))
 
 
 def main_dialog(acc_no):
