@@ -4,7 +4,7 @@ import mysql.connector
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from ui import (front, login, createacc, main1, deposit, checkbalance,
                 withdraw, fdm, fdc, confirmfd, fdb, transactionm,
-                transactionc)
+                transactionc, closeacc)
 from datetime import datetime, date
 
 
@@ -27,6 +27,85 @@ def fetch_balance(acc_no):
     except mysql.connector.Error as err:
         print(err.msg)
         return "Something went wrong :) "
+
+
+class CloseAccount(QDialog):
+    def __init__(self, acc_no, acc):
+        super().__init__()
+        self.ui = closeacc.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.label.setText(f"Account No. {acc_no} ")
+        self.ui.label_2.setText(f"WARNING!! This will close your account\n"
+                                f"{acc_no} permanently and\nerase all data "
+                                f"related to it. ")
+        self.ui.pushButton.clicked.connect(lambda: self.close_acc(acc_no,
+                                                                  acc))
+
+    def close_acc(self, acc_no, acc):
+        try:
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            query = ("select fd_no from quantum_bank.fix_deposit where acc_no"
+                     "=%s;")
+            value = (acc_no,)
+            cur.execute(query, value)
+            result = cur.fetchall()
+            fd = result[0]
+            self.ui.label_2.setText(f"You have FDs in your account either\n"
+                                    f"wait for them to mature or break it\n"
+                                    f"for the closure of account!\n{fd}")
+        except IndexError:
+            balance = fetch_balance(acc_no)
+            try:
+                balance = float(balance)
+                if balance == 0:
+                    self.closure(acc_no, acc)
+                self.ui.label_2.setText(f"You have balance: {balance} INR in your\n"
+                                        f"account! please withdraw it for closure\n"
+                                        f"of the account!")
+            except ValueError:
+                self.ui.label_2.setText("something went wrong")
+        except mysql.connector.Error as e:
+            print(e.msg)
+            self.ui.label_2.setText("Something went wrong :)")
+
+    def closure(self, acc_no, acc):
+        self.ui.label_2.setText("closing your account....")
+        try:
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root@123",  # Put your database password
+                database='quantum_bank'
+            )
+            cur = conn.cursor()
+            query = ("delete  from quantum_bank.accounts where account_no="
+                     "%s;")
+            value = (acc_no,)
+            try:
+                cur.execute(query, value)
+                query = ("delete from quantum_bank.users where account_no="
+                         "%s;")
+                cur.execute(query, value)
+                conn.commit()
+                self.close()
+                acc.close()
+            except mysql.connector.Error:
+                conn.rollback()
+                self.ui.label_2.setText(f"unable to find {acc_no}")
+        except mysql.connector.Error:
+            self.ui.label_2.setText("Something went wrong! Try agin later.")
+
+
+def close_fnc(acc, acc_no):
+    window13 = CloseAccount(acc_no, acc)
+    window13.setWindowTitle("Close account")
+    window13.exec()
 
 
 class TraConfirm(QDialog):
@@ -606,6 +685,8 @@ class MainDialog(QDialog):
         self.ui.pushButton_3.clicked.connect(lambda: check_fnc(acc_no))
         self.ui.pushButton_4.clicked.connect(lambda: fd_fnc(acc_no))
         self.ui.pushButton_7.clicked.connect(lambda: tra_fnc(acc_no))
+        self.ui.pushButton_8.clicked.connect(lambda: close_fnc(self,
+                                                               acc_no))
 
 
 def main_dialog(acc_no):
