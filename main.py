@@ -261,6 +261,8 @@ class FDBreak(QDialog):
                 database='quantum_bank'
             )
             cur = conn.cursor()
+            # Disable the triggers
+            cur.execute("SET @DISABLE_TRIGGER = 1")
             query = ("select amount from quantum_bank.fix_deposit where "
                      "fd_no = %s and acc_no = %s;")
             values = (fd_no, acc_no)
@@ -340,6 +342,8 @@ class FDConfirm(QDialog):
                 database='quantum_bank'
             )
             cur = conn.cursor()
+            # Disable the triggers
+            cur.execute("SET @DISABLE_TRIGGER = 1")
             balance = float(balance)
             balance = balance - amount
             query = ("UPDATE quantum_bank.accounts set balance = %s "
@@ -550,7 +554,11 @@ class WithDraw(QDialog):
                                  "where account_no = %s;")
                         values = (balance, acc_no)
                         cur = conn.cursor()
+                        # Enable the triggers
+                        cur.execute("SET @DISABLE_TRIGGER = 0")
                         cur.execute(query, values)
+                        # Disable the triggers
+                        cur.execute("SET @DISABLE_TRIGGER = 1")
                         conn.commit()
                         self.close()
                         return self.info_messagebox(f"The amount {amount} INR "
@@ -641,8 +649,12 @@ class Deposit(QDialog):
                          "where account_no = %s;")
                 values = (balance, acc_no)
                 cur = conn.cursor()
+                # Enable the triggers
+                cur.execute("SET @DISABLE_TRIGGER = 0")
                 try:
                     cur.execute(query, values)
+                    # Disable the triggers
+                    cur.execute("SET @DISABLE_TRIGGER = 1")
                     conn.commit()
                     self.close()
                     return self.info_messagebox(f"The amount {amount} INR "
@@ -719,6 +731,8 @@ class LoginDialog(QDialog):
                 database='quantum_bank'
             )
             cur = conn.cursor()
+            # Disable the triggers
+            cur.execute("SET @DISABLE_TRIGGER = 1")
             query = "SELECT * FROM quantum_bank.users where username = %s"
             values = (username,)
             try:

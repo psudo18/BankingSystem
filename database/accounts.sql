@@ -1,10 +1,9 @@
-create table accounts
-(
-    account_no decimal(16)                 not null,
-    balance    decimal(10, 2) default 0.00 not null,
-    name       varchar(30)                 not null,
-    constraint accounts_users_account_no_fk
-        foreign key (account_no) references quantum_bank.users (account_no)
-);
+-- quantum_bank.accounts definition
 
-
+CREATE TABLE `accounts` (
+  `account_no` decimal(16,0) NOT NULL,
+  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`account_no`),
+  CONSTRAINT `accounts_users_account_no_fk` FOREIGN KEY (`account_no`) REFERENCES quantum_bank.users (`account_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

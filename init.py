@@ -38,7 +38,12 @@ try:
     cur.execute(sql_script, multi=True)
 
     # The fix_deposit.sql is used to create fd table in database.
-    with open("database\\fix_deposit.sql.sql") as sql_file:
+    with open("database\\fix_deposit.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
+    # The transactions.sql is used to create transactions table in database.
+    with open("database\\transactions.sql") as sql_file:
         sql_script = sql_file.read()
     cur.execute(sql_script, multi=True)
 
@@ -47,6 +52,26 @@ try:
 
     # The fd_scheduler.sql is used to create event update balance in database.
     with open("database\\fd_scheduler.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
+    # This creates a deposit trigger
+    with open("database\\deposit_trigger.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
+    # This creates a with draw trigger
+    with open("database\\withdraw_trigger.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
+    # This creates a fd create trigger
+    with open("database\\fd_create_trigger.sql") as sql_file:
+        sql_script = sql_file.read()
+    cur.execute(sql_script, multi=True)
+
+    # This creates a fd break trigger
+    with open("database\\fd_break_trigger.sql") as sql_file:
         sql_script = sql_file.read()
     cur.execute(sql_script, multi=True)
 
