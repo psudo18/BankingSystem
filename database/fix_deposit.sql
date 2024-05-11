@@ -5,7 +5,7 @@ CREATE TABLE `fix_deposit` (
   `acc_no` decimal(16,0) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `maturity_amount` decimal(10,2) NOT NULL,
-  `roi` decimal(2,1) NOT NULL,
+  `roi` decimal(3,1) NOT NULL,
   `start_date` date NOT NULL,
   `maturity_date` date NOT NULL,
   `years` int NOT NULL,

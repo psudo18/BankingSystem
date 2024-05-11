@@ -1,1 +1,1 @@
-SELECT * FROM quantum_bank.users;
+SELECT * FROM quantum_bank.transactions;

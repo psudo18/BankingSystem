@@ -99,7 +99,7 @@ class CloseAccount(QDialog):
                 conn.rollback()
                 self.ui.label_2.setText(f"unable to find {acc_no}")
         except mysql.connector.Error:
-            self.ui.label_2.setText("Something went wrong! Try agin later.")
+            self.ui.label_2.setText("Something went wrong! Try again later.")
 
 
 def close_fnc(acc, acc_no):
@@ -143,6 +143,8 @@ class TraConfirm(QDialog):
                 database='quantum_bank'
             )
             cur = conn.cursor()
+            # Disable the triggers
+            cur.execute("SET @DISABLE_TRIGGER = 1")
             rec_bal = fetch_balance(rec_acc)
             rec_bal = float(rec_bal)
             balance = balance - amount
@@ -153,6 +155,13 @@ class TraConfirm(QDialog):
                 values = (balance, acc_no)
                 cur.execute(query, values)
                 values = (rec_bal, rec_acc)
+                cur.execute(query, values)
+                query = ("INSERT INTO quantum_bank.transactions (acc_no, "
+                         "amount, transaction_type, transaction_detail) "
+                         "VALUES (%s, %s ,%s ,%s) ")
+                values = (acc_no, amount, 'DEBITED', str(rec_acc))
+                cur.execute(query, values)
+                values = (rec_acc, amount, 'CREDITED', str(acc_no))
                 cur.execute(query, values)
                 conn.commit()
                 self.close()
