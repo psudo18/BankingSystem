@@ -62,8 +62,7 @@ class CloseAccount(QDialog):
         except IndexError:
             balance = fetch_balance(acc_no)
             try:
-                balance = float(balance)
-                if balance == 0:
+                if balance == 0.0:
                     self.closure(acc_no, acc)
                 self.ui.label_2.setText(f"You have balance: {balance} INR in your\n"
                                         f"account! please withdraw it for closure\n"
@@ -84,10 +83,13 @@ class CloseAccount(QDialog):
                 database='quantum_bank'
             )
             cur = conn.cursor()
-            query = ("delete  from quantum_bank.accounts where account_no="
+            query = ("delete  from quantum_bank.transactions where acc_no="
                      "%s;")
             value = (acc_no,)
             try:
+                cur.execute(query, value)
+                query = ("delete from quantum_bank.accounts where account_no="
+                         "%s;")
                 cur.execute(query, value)
                 query = ("delete from quantum_bank.users where account_no="
                          "%s;")
